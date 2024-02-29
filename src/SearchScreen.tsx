@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, FlatList, Text, Image, StyleSheet, Animated,TouchableOpacity } from 'react-native';
 import axios from 'axios';
-import styles from '../src/SearchScreenStyles';
+import styles from './SearchScreenStyles';
 import { Input, Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../App';
+import { StackNavigationProp } from '@react-navigation/stack';
 
+type SearchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Search'>;
+
+interface UserType{
+  id: string; 
+  name: string; 
+  avatar_url: string, 
+  login: string,
+}
 
 export default function SearchScreen() {
 
-  const navigation = useNavigation(); // Now you have access to the navigation object
-  const [searchQuery, setSearchQuery] = useState('');
-  const [users, setUsers] = useState([]);
+  const navigation = useNavigation<SearchScreenNavigationProp>(); // Now you have access to the navigation object
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [users, setUsers] = useState<Array<UserType>>([]);
   const opacity = useState(new Animated.Value(1))[0]; // Initialize Animated.Value for opacity
 
   useEffect(() => {
@@ -63,7 +73,6 @@ export default function SearchScreen() {
           paddingHorizontal: 15,
           backgroundColor: '#FDBF60',
           shadowColor: "#000",
-          color: 'white',
           shadowOffset: {
             width: 0,
             height: 2,
@@ -84,7 +93,7 @@ export default function SearchScreen() {
               setUsers([]); // Clear users list as well
             }}
           />
-        ) : null}
+        ) : undefined}
         onSubmitEditing={fetchUsers} // This triggers fetchUsers when "Enter" is pressed
         returnKeyType="search" // Changes the return key to say "Search"
       />

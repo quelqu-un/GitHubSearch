@@ -2,15 +2,48 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { Icon } from 'react-native-elements';
-import styles from '../src/UserDetailScreenStyles';
+import styles from './UserDetailScreenStyles';
+import { RootStackParamList } from '../App';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
+
+type UserDetailScreenRouteProp = RouteProp<RootStackParamList, 'UserDetail'>;
+
+interface UserDetailType{
+  id: string; 
+  name: string; 
+  avatar_url: string, 
+  login: string,
+  bio: string,
+  followers: string,
+  public_repos: string,
+  following: string,
+  contributors: string,
+}
+
+interface UserType{
+  id: string; 
+  name: string; 
+  avatar_url: string, 
+  login: string,
+  language: string,
+  license: {
+    name: string
+  } | null,
+  updated_at: string,
+  stargazers_count: number
+  contributors: Array<{
+    login: string;
+    contributions: string;
+  }>
+}
 
 const UserDetailScreen = ({ route }) => {
   const { userName } = route.params;
-
-  
-  const [userDetails, setUserDetails] = useState({});
-  const [repositories, setRepositories] = useState([]);
+  const [userDetails, setUserDetails] = useState<UserDetailType | null>(null);
+  const [repositories, setRepositories] = useState<Array<UserType>>([]);
+ 
 
   useEffect(() => {
 
@@ -52,22 +85,22 @@ const UserDetailScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: userDetails.avatar_url }} style={styles.avatar} />
-      <Text style={styles.name}>{userDetails.name}</Text>
-      <Text style={styles.description}>{userDetails.bio}</Text>
+      <Image source={{ uri: userDetails?.avatar_url }} style={styles.avatar} />
+      <Text style={styles.name}>{userDetails?.name}</Text>
+      <Text style={styles.description}>{userDetails?.bio}</Text>
         {/* Additional User Information */}
         <View style={styles.infoContainer}>
         <View style={styles.infoItem}>
           <Text style={styles.infoTitle}>Followers</Text>
-          <Text style={styles.infoValue}>{userDetails.followers}</Text>
+          <Text style={styles.infoValue}>{userDetails?.followers}</Text>
         </View>
         <View style={styles.infoItem}>
           <Text style={styles.infoTitle}>Repos</Text>
-          <Text style={styles.infoValue}>{userDetails.public_repos}</Text>
+          <Text style={styles.infoValue}>{userDetails?.public_repos}</Text>
         </View>
         <View style={styles.infoItem}>
           <Text style={styles.infoTitle}>Following</Text>
-          <Text style={styles.infoValue}>{userDetails.following}</Text>
+          <Text style={styles.infoValue}>{userDetails?.following}</Text>
         </View>
       </View>
 
@@ -76,7 +109,7 @@ const UserDetailScreen = ({ route }) => {
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.repoList} // Add padding here
         renderItem={({ item: repo }) => (
-            <View style={styles.repoItem}>
+          <View style={styles.repoItem}>
             <Text style={styles.repoName}>{repo.name}</Text>
             <View style={styles.infoRow}>
                 <Text style={styles.infoText}>{repo.language || 'N/A'}</Text>

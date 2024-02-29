@@ -1,11 +1,18 @@
+
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import SearchScreen from '../MyGitHubApp/src/SearchScreen'; // Adjust the import path as necessary
-import UserDetailScreen from '../MyGitHubApp/src/UserDetailScreen'; // Adjust the import path as necessary
+import SearchScreen from './src/SearchScreen'; // Adjust the import path as necessary
+import UserDetailScreen from './src/UserDetailScreen'; // Adjust the import path as necessary
 //import { SafeAreaView } from 'react-native';
 
-const Stack = createStackNavigator();
+//const Stack = createStackNavigator();
+
+const Stack = createStackNavigator<RootStackParamList>();
+export type RootStackParamList = {
+  Search: undefined;
+  UserDetail: { userName: string };
+};
 
 function App() {
   return (
